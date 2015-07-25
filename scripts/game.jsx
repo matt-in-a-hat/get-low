@@ -9,26 +9,35 @@ var GameView = React.createClass({
     var players = {
       jump: '/images/player_jump.png',
       running: '/images/player_running.png',
-      slide: '/images/player_slide.png'
+      slide: '/images/player_slide.png',
+      jumpSlide: '/images/player_diagonal_slide.png',
+      slideLose: '/images/player_slide_lose.png',
+      wallLose: '/images/player_wall_lose.png'
     }
     var tiles = [
       {
         img: '/images/tile_ground.png',
         win: players.running,
-        lose: players.slide, // FIX IMG
+        lose: players.slideLose,
         keycode: 115
       },
       {
         img: '/images/tile_jumpblock.png',
         win: players.jump,
-        lose: players.slide, // FIX IMG
+        lose: players.wallLose,
         keycode: 97
       },
       {
         img: '/images/tile_duck_under.png',
         win: players.slide,
-        lose: players.running, // FIX IMG
+        lose: players.wallLose,
         keycode: 100
+      },
+      {
+        img: '/images/tile_diagonal_slide.png',
+        win: players.jumpSlide,
+        lose: players.slideLose,
+        keycode: 102
       }
     ]
     var MOVE_COUNT = 4
@@ -36,7 +45,8 @@ var GameView = React.createClass({
     var keyToAction = {
       97: players.jump,
       115: players.running,
-      100: players.slide
+      100: players.slide,
+      102: players.jumpSlide
     }
 
     return {
@@ -123,7 +133,7 @@ var GameView = React.createClass({
         return (<Tile data={ item } playerImg={ playerImg }></Tile>)
       }.bind(this))
 
-    return (<div>
+    return (<div className="tile-wrapper">
 
       <div className="tiles">
       {{ tiles }}
