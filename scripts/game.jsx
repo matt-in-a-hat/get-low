@@ -1,9 +1,11 @@
 
-var React = require('react'),
-  Tile = require("./tile.jsx")
+var React = require('react')
+var Tile = require('./tile.jsx')
+var clone = require('clone')
 
 var GameView = React.createClass({
-  getInitialState: function () {
+  getDefaultProps: function () {
+
     var players = {
       jump: '/images/player_jump.png',
       running: '/images/player_running.png',
@@ -26,29 +28,57 @@ var GameView = React.createClass({
         lose: players.running // FIX IMG
       }
     ]
-
-    var level = []
     var MOVE_COUNT = 4
 
-    for (var i = 0; i < MOVE_COUNT; i++) {
-      level.push(tiles[Math.floor(Math.random() * tiles.length) % tiles.length])
+    var keyToAction = {
+      97: players.jump,
+      115: players.running,
+      100: players.slide
     }
 
     return {
       tiles: tiles,
-      level: level,
-      playerPosition: 0,
-      MOVE_COUNT: MOVE_COUNT
+      MOVE_COUNT: MOVE_COUNT,
+      keyToAction: keyToAction
     }
+  },
+
+  getInitialState: function () {
+
+    var levels = []
+    var tiles = this.props.tiles
+
+    for (var i = 0; i < this.props.MOVE_COUNT; i++) {
+      var tile = tiles[Math.floor(Math.random() * tiles.length) % tiles.length]
+      levels.push(clone(tile))
+    }
+
+    return {
+      levels: levels,
+      playerPosition: 0
+    }
+  },
+
+  OnKeyDown: function (e) {
+    var levels = this.state.levels
+    var level = levels[this.state.playerPosition]
+    var playerAction = this.props.keyToAction[e.keyCode]
+    var win = level.win === playerAction
+
+    level.playerImg = win ? level.win : level.lose
+
+    this.setState({
+      "levels": levels
+    })
   },
 
   render: function () {
 
-    var tiles = this.state.level.map(function (item) {
+    var tiles = this.state.levels.map(function (item) {
         return (<Tile data={ item }></Tile>)
       })
 
-    return (<div>
+    return (<div onKeyDown={ this.OnKeyDown }>
       {{ tiles }}
 
     </div>)
