@@ -5,15 +5,25 @@ var React = require('react'),
 var GameView = React.createClass({
   getInitialState: function () {
     var players = {
-      jump: '/images/jump.png',
-      run: '/images/run.png',
-      runIntoWall: '/images/runIntoWall.png'
+      jump: '/images/player_jump.png',
+      running: '/images/player_running.png',
+      slide: '/images/player_slide.png'
     }
     var tiles = [
       {
-        img: '/images/tile1.png',
+        img: '/images/tile_ground.png',
+        win: players.running,
+        lose: players.slide // FIX IMG
+      },
+      {
+        img: '/images/tile_jumpblock.png',
         win: players.jump,
-        lose: players.runIntoWall
+        lose: players.slide // FIX IMG
+      },
+      {
+        img: '/images/tile_duck_under.png',
+        win: players.slide,
+        lose: players.running // FIX IMG
       }
     ]
 

@@ -10,6 +10,10 @@ h1 {
 	text-align: center;
 }
 
+body {
+  background-color: darken(white, 10);
+}
+
 #container {
 	@extend .clearfix;
 	// 4 columns wide
@@ -21,6 +25,8 @@ h1 {
 	position: relative;
 	margin: 100px auto 0 auto;
 	width: $tile-width * 4;
+  background-color: white;
+
 
 	.tile {
 		width: $tile-width;
