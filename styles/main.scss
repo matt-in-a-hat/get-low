@@ -15,6 +15,28 @@ body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+#container {
+
+}
+
+.tile-wrapper {
+  background: url("/images/background.png") repeat;
+  background-origin: 0 0;
+  background-size: auto 100%;
+
+
+  $size: 128px;
+
+  width: 3 * $size;
+  height: $size * 0.75;
+
+  margin: 0 auto;
+  padding-top: 32px;
+
+  box-sizing: border-box;
+
+}
+
 .tiles {
 	@extend .clearfix;
 	// 4 columns wide
@@ -25,10 +47,8 @@ body {
   $tile-count: 6;
 
 	position: relative;
-	margin: 100px auto 0 auto;
+	margin: 0 auto;
 	width: $tile-width * $tile-count;
-  background-color: white;
-
 
 	.tile {
 		width: $tile-width;
