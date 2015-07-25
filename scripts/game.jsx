@@ -65,18 +65,34 @@ var GameView = React.createClass({
     var playerAction = this.props.keyToAction[e.keyCode]
     var win = level.win === playerAction
 
-    level.playerImg = win ? level.win : level.lose
+    var playerImg = win ? level.win : level.lose
 
-    this.setState({
-      "levels": levels
-    })
+    if (win) {
+      this.setState({
+        playerImg: playerImg,
+        playerPosition: this.state.playerPosition + 1
+      })
+    } else {
+      // this.resetLevel(levels)
+      this.setState({
+        playerImg: playerImg,
+        playerPosition: 0
+      })
+    }
   },
+
+  // resetLevel: function (levels) {
+  // },
 
   render: function () {
 
-    var tiles = this.state.levels.map(function (item) {
-        return (<Tile data={ item }></Tile>)
-      })
+    var tiles = this.state.levels.map(function (item, i) {
+        var playerImg
+        if (i === this.state.playerPosition - 1 && this.state.playerImg) {
+          playerImg = this.state.playerImg
+        }
+        return (<Tile data={ item } playerImg={ playerImg }></Tile>)
+      }.bind(this))
 
     return (<div onKeyDown={ this.OnKeyDown }>
       {{ tiles }}
