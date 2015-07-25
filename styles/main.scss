@@ -1,0 +1,47 @@
+.clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+h1 {
+	text-align: center;
+}
+
+#container {
+	@extend .clearfix;
+	// 4 columns wide
+	// 2x width of one column
+
+	$tile-width: 32px;
+	$tile-height: 64px;
+
+	position: relative;
+	margin: 100px auto 0 auto;
+	width: $tile-width * 4;
+
+	.tile {
+		width: $tile-width;
+		height: $tile-height;
+		display: block;
+		position: relative;
+
+		float: left;
+
+		img {
+			width: 100%;
+			height: 100%;
+		}
+
+		.player {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+		}
+	}
+
+}
