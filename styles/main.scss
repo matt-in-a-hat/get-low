@@ -12,19 +12,21 @@ h1 {
 
 body {
   background-color: darken(white, 10);
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-#container {
+.tiles {
 	@extend .clearfix;
 	// 4 columns wide
 	// 2x width of one column
 
 	$tile-width: 32px;
 	$tile-height: 64px;
+  $tile-count: 6;
 
 	position: relative;
 	margin: 100px auto 0 auto;
-	width: $tile-width * 4;
+	width: $tile-width * $tile-count;
   background-color: white;
 
 
@@ -49,5 +51,10 @@ body {
 			left: 0;
 		}
 	}
+}
 
+.expected-controls {
+  text-align: center;
+  font-size: 3em;
+  text-transform: uppercase;
 }

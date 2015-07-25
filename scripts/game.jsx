@@ -1,7 +1,7 @@
 
 var React = require('react')
 var Tile = require('./tile.jsx')
-var clone = require('clone')
+var ExpectedControls = require('./expected-controls.jsx')
 
 var GameView = React.createClass({
   getDefaultProps: function () {
@@ -15,17 +15,20 @@ var GameView = React.createClass({
       {
         img: '/images/tile_ground.png',
         win: players.running,
-        lose: players.slide // FIX IMG
+        lose: players.slide, // FIX IMG
+        keycode: 115
       },
       {
         img: '/images/tile_jumpblock.png',
         win: players.jump,
-        lose: players.slide // FIX IMG
+        lose: players.slide, // FIX IMG
+        keycode: 97
       },
       {
         img: '/images/tile_duck_under.png',
         win: players.slide,
-        lose: players.running // FIX IMG
+        lose: players.running, // FIX IMG
+        keycode: 100
       }
     ]
     var MOVE_COUNT = 4
@@ -39,7 +42,8 @@ var GameView = React.createClass({
     return {
       tiles: tiles,
       MOVE_COUNT: MOVE_COUNT,
-      keyToAction: keyToAction
+      keyToAction: keyToAction,
+      players: players
     }
   },
 
@@ -48,43 +52,68 @@ var GameView = React.createClass({
     var levels = []
     var tiles = this.props.tiles
 
+    levels.push(tiles[0])
+
     for (var i = 0; i < this.props.MOVE_COUNT; i++) {
       var tile = tiles[Math.floor(Math.random() * tiles.length) % tiles.length]
-      levels.push(clone(tile))
+      levels.push(tile)
     }
 
+    levels.push(tiles[0])
+
     return {
+      playerImg: this.props.players.running,
       levels: levels,
-      playerPosition: 0
+      playerPosition: 1
     }
   },
 
+  resetLevel: function () {
+      this.setState({
+        playerImg: this.props.players.running,
+        playerPosition: 1
+      })
+  },
+
   OnKeyDown: function (e) {
-    var levels = this.state.levels
-    var level = levels[this.state.playerPosition]
+    var level
+    var playerPosition = this.state.playerPosition
+    if (this.state.reset) {
+      level = this.state.levels[0]
+      playerPosition = 0
+    } else {
+      var levels = this.state.levels
+      level = levels[playerPosition]
+    }
     var playerAction = this.props.keyToAction[e.keyCode]
     var win = level.win === playerAction
 
     var playerImg = win ? level.win : level.lose
 
     if (win) {
-      this.setState({
-        playerImg: playerImg,
-        playerPosition: this.state.playerPosition + 1
-      })
+      if (playerPosition > this.props.MOVE_COUNT) {
+        this.resetLevel()
+      } else {
+        this.setState({
+          playerImg: playerImg,
+          playerPosition: playerPosition + 1,
+          reset: false
+        })
+      }
     } else {
-      // this.resetLevel(levels)
       this.setState({
         playerImg: playerImg,
-        playerPosition: 0
+        playerPosition: playerPosition + 1,
+        reset: true
       })
+
+      console.debug("restart game!")
     }
   },
 
-  // resetLevel: function (levels) {
-  // },
-
   render: function () {
+    var nextKeyCode = this.state.levels[this.state.playerPosition].keycode
+
 
     var tiles = this.state.levels.map(function (item, i) {
         var playerImg
@@ -94,8 +123,13 @@ var GameView = React.createClass({
         return (<Tile data={ item } playerImg={ playerImg }></Tile>)
       }.bind(this))
 
-    return (<div onKeyDown={ this.OnKeyDown }>
+    return (<div>
+
+      <div className="tiles">
       {{ tiles }}
+      </div>
+
+      <ExpectedControls keycode={ nextKeyCode } ></ExpectedControls>
 
     </div>)
   }
